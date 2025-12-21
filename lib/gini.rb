@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'set'
+
 class Gini
   attr_reader :elapsed
 
@@ -9,6 +11,7 @@ class Gini
     @ds = ds
 
     @elapsed = nil
+    @used = Set.new
   end
 
   def walk
@@ -23,7 +26,7 @@ class Gini
 
     t << "# Created: #{Time.now}"
     t << "# Rows: #{@ds.size}"
-    t << "# Columns: #{@ds.columns.join(', ')}"
+    t << "# Columns: #{@used.to_a.join(', ')}"
     t << '# Classifier: Gini'
     t << "# Elapsed: #{@elapsed} seconds"
     t << '#'
@@ -31,7 +34,7 @@ class Gini
     t << report_r(list, 1)
     t << 'end'
 
-    t.join("\n")
+    t.flatten.join("\n")
   end
 
   private
@@ -72,6 +75,7 @@ class Gini
     return "return '#{ds.targets.join(', ')}'" if best_name.nil?
 
     root = ds.column_type(best_name) == 'symbol' ? "if data['#{best_name}'] == '#{best_value}' then" : "if data['#{best_name}'] < #{best_value} then"
+    @used << best_name
 
     left = best_left.targets.size == 1 ? "return '#{best_left.targets.first}'" : walk_tree(best_left, depth + 1)
     right = best_right.targets.size == 1 ? "return '#{best_right.targets.first}'" : walk_tree(best_right, depth + 1)

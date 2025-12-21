@@ -77,5 +77,3 @@ Compare the output of each on the iris dataset to see the differences. `id3` has
 ## TODO
 
 1. Remove the hardcoded `TARGET` value from the classifies and have the dataset return the target column. Also make sure that the target column can be anywhere other than the last column
-
-2. The rendered function should only list the features that were actually used (see the `junk` column example)
