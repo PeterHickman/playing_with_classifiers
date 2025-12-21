@@ -1,0 +1,49 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+$LOAD_PATH << './lib'
+
+require 'opts'
+require 'dataset'
+require 'gini'
+require 'id3'
+
+o = Opts.new(ARGV)
+
+input = o.option('--input', 'string')
+output = o.option('--output', 'string')
+method = o.option('--method', 'string')
+
+if output.end_with?('.rb')
+  name = output[0..-4]
+else
+  puts "Output should have a '.rb' extension"
+  exit 1
+end
+
+klass = nil
+
+case method
+when 'id3'
+  klass = ID3
+when 'gini'
+  klass = Gini
+else
+  puts "The only available methods are 'id3' and 'gini'"
+  exit 1
+end
+
+puts "[#{klass.to_s.upcase}] Input #{input}"
+puts "[#{klass.to_s.upcase}] Output #{output}"
+
+ds = DataSet.new
+ds.from_file(input)
+
+g = klass.new(ds)
+x = g.walk
+
+f = File.new(output, 'w')
+f.puts g.report(name, x)
+f.close
+
+puts "[#{klass.to_s.upcase}] Elapsed #{g.elapsed}"
