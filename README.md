@@ -16,11 +16,11 @@ $ ./classify --input data/iris.csv --output fred.rb --method gini
 The output is in `fred.rb` and is the Ruby code that will return the classification
 
 ```ruby
-# Created: 2025-12-21 11:47:21 +0000
+# Created: 2025-12-21 14:48:40 +0000
 # Rows: 150
-# Columns: sepal_length, sepal_width, petal_length, petal_width
+# Columns: petal_length, petal_width, sepal_length
 # Classifier: Gini
-# Elapsed: 0.004061 seconds
+# Elapsed: 0.00376 seconds
 #
 def fred(data)
   if data['petal_length'] < 2.45 then
