@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ID3
   attr_reader :elapsed
 
@@ -25,8 +27,8 @@ class ID3
     t << "# Created: #{Time.now}"
     t << "# Rows: #{@ds.size}"
     t << "# Columns: #{@ds.columns.join(', ')}"
-    t << "# Classifier: ID3"
-    t << "#"
+    t << '# Classifier: ID3'
+    t << '#'
     t << "def #{name}(data)"
     t << report_tree(tree, @ds.target, 1)
     t << 'end'
@@ -77,7 +79,7 @@ class ID3
     attribute_entropy.each do |a_name, v|
       feature_entropy = 0.0
 
-      v.each do |_k, num|
+      v.each_value do |num|
         fraction = num / (attribute_totals[a_name] + EPS)
         feature_entropy += -fraction * Math.log2(fraction + EPS)
       end
