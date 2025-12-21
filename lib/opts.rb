@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Opts
   attr_reader :arguments
 
