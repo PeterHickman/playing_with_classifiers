@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'set'
+
 class ID3
   attr_reader :elapsed
 
@@ -12,6 +14,7 @@ class ID3
     @ds = ds
 
     @elapsed = nil
+    @used = Set.new
   end
 
   def walk
@@ -23,14 +26,15 @@ class ID3
 
   def report(name, tree)
     t = []
+    r = report_tree(tree, @ds.target, 1)
 
     t << "# Created: #{Time.now}"
     t << "# Rows: #{@ds.size}"
-    t << "# Columns: #{@ds.columns.join(', ')}"
+    t << "# Columns: #{@used.to_a.join(', ')}"
     t << '# Classifier: ID3'
     t << '#'
     t << "def #{name}(data)"
-    t << report_tree(tree, @ds.target, 1)
+    t << r
     t << 'end'
 
     t.join("\n")
@@ -151,9 +155,11 @@ class ID3
     tree[variable].each do |(k, v)|
       if first_line
         r << "#{sp}if data['#{variable}'] == #{k} then"
+        @used << variable
         first_line = false
       else
         r << "#{sp}elsif data['#{variable}'] == #{k} then"
+        @used << variable
       end
 
       r << if v.is_a? String
