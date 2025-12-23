@@ -74,7 +74,7 @@ class Gini
 
     return "return '#{ds.targets.join(', ')}'" if best_name.nil?
 
-    root = ds.column_type(best_name) == 'symbol' ? "if data['#{best_name}'] == '#{best_value}' then" : "if data['#{best_name}'] < #{best_value} then"
+    root = ds.column_type(best_name) == 'string' ? "if data['#{best_name}'] == '#{best_value}' then" : "if data['#{best_name}'] < #{best_value} then"
     @used << best_name
 
     left = best_left.targets.size == 1 ? "return '#{best_left.targets.first}'" : walk_tree(best_left, depth + 1)
