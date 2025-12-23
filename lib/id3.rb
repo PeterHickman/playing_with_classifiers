@@ -131,7 +131,7 @@ class ID3
 
     ds.values(winner).each do |value|
       nds = ds.extract(winner, value)
-      value = "'#{value}'" if @ds.column_type(winner) == 'symbol'
+      value = "'#{value}'" if @ds.column_type(winner) == 'string'
 
       targets = nds.targets
       tree[winner][value] = if targets.size == 1

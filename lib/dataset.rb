@@ -152,7 +152,7 @@ class DataSet
                end
       when 'integer'
         row << item.to_i
-      when 'symbol'
+      when 'string'
         row << item
       when 'target'
         row << item
