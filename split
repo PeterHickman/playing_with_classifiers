@@ -40,9 +40,9 @@ ds.targets.each do |t|
   x[t] = { total: ds.count(t), test: 0, train: 0, rows: [] }
 end
 
+target_index = ds.column_index(ds.target)
 ds.rows.each_with_index do |row, i|
-  # Using the fact that the target is, currently, the last column
-  x[row[-1]][:rows] << i
+  x[row[target_index]][:rows] << i
 end
 
 m = 1.0 - split
