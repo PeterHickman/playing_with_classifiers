@@ -110,6 +110,16 @@ class DataSet
     left
   end
 
+  def extract_rows(rows)
+    ds = DataSet.new(@columns, @indexed, @target)
+
+    rows.each do |i|
+      ds.add(@rows[i])
+    end
+
+    ds
+  end
+
   def select(rows)
     left = DataSet.new(@columns, @indexed, @target)
 
