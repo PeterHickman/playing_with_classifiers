@@ -1,0 +1,16 @@
+#!/bin/sh
+
+./split --source $1 --split .7 --testing testing.csv --training training.csv
+
+echo
+
+./classify --input training.csv --output fred_gini.rb --method gini
+
+echo
+
+./classify --input training.csv --output fred_id3.rb --method id3
+
+echo
+
+./test --source testing.csv --function fred_gini.rb
+./test --source testing.csv --function fred_id3.rb
