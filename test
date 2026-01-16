@@ -27,4 +27,4 @@ ds.rows_as_hash.each do |row|
   c += 1 if send(fn, row) == row[ds.target]
 end
 
-puts format('Correct %.4f%%', c / t * 100)
+puts format('Correct %.4f%% with %s', c / t * 100, fn)
