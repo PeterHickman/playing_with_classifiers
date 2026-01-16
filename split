@@ -31,7 +31,7 @@ train_fn = o.option('--training', 'string')
 ds = DataSet.new
 ds.from_file(source)
 
-puts "The data set contains #{ds.size} rows of data"
+puts "The data set contains #{ds.size} rows"
 puts "The target for classification is the [#{ds.target}] column"
 puts
 
