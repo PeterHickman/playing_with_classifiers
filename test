@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+$LOAD_PATH << './lib'
+
+require 'opts'
+require 'dataset'
+
+o = Opts.new(ARGV)
+
+source = o.option('--source', 'string')
+function = o.option('--function', 'string')
+
+ds = DataSet.new
+ds.from_file(source)
+
+eval(File.read(function))
+
+fn = File.basename(function, '.rb')
+
+t = 0.0
+c = 0.0
+
+ds.rows_as_hash.each do |row|
+  t += 1
+
+  c += 1 if send(fn, row) == row[ds.target]
+end
+
+puts format('Correct %.4f%%', c / t * 100)
