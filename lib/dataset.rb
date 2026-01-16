@@ -64,6 +64,16 @@ class DataSet
     end
   end
 
+  def rows_as_hash
+    l = []
+
+    @rows.each do |row|
+      l << Hash[@columns.map { |c| c[0] }.zip(row)]
+    end
+
+    l
+  end
+
   def gaps(name)
     if GAPS.include? @columns[name][:type]
       sparse_gaps(name)
