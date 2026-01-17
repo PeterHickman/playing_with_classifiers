@@ -6,21 +6,6 @@ $LOAD_PATH << './lib'
 require 'opts'
 require 'dataset'
 
-def pick_n(list, number)
-  r = []
-
-  number.times do
-    i = rand(list.size)
-    r << list[i]
-    list.delete_at(i)
-  end
-
-  [list, r]
-end
-
-FORMAT_SSS = '%-20s : %7s : %7s : %7s'
-FORMAT_III = '%-20s : %7d : %7d : %7d'
-
 o = Opts.new(ARGV)
 
 source = o.option('--source', 'string')
@@ -28,50 +13,10 @@ split = o.option('--split', 'float')
 test_fn = o.option('--testing', 'string')
 train_fn = o.option('--training', 'string')
 
-ds = DataSet.new
-ds.from_file(source)
-
-puts "The data set contains #{ds.size} rows"
-puts "The target for classification is the [#{ds.target}] column"
-puts
-
-x = {}
-ds.targets.each do |t|
-  x[t] = { total: ds.count(t), test: 0, train: 0, rows: [] }
-end
-
-target_index = ds.column_index(ds.target)
-ds.rows.each_with_index do |row, i|
-  x[row[target_index]][:rows] << i
-end
-
-m = 1.0 - split
-x.each do |t, v|
-  x[t][:test] = [1, (v[:total] * m).to_i].max
-  x[t][:train] = v[:total] - x[t][:test]
-end
-
-puts format(FORMAT_SSS, 'Targets', 'total', 'train', 'test')
-puts '---------------------+---------+---------+--------'
-x.each do |t, v|
-  puts format(FORMAT_III, t, v[:total], v[:train], v[:test])
-end
-
-train_rows = []
-test_rows = []
-
-x.each_value do |v|
-  a, b = pick_n(v[:rows], v[:test])
-  train_rows += a
-  test_rows += b
-end
-
-train_ds = ds.extract_rows(train_rows)
-test_ds = ds.extract_rows(test_rows)
+train_ds, test_ds = DataSet.create_training_and_test(source, split)
 
 train_ds.save(train_fn)
 test_ds.save(test_fn)
 
-puts
 puts "The test dataset has #{test_ds.size} rows and is written to #{test_fn}"
 puts "The training dataset has #{train_ds.size} rows and is written to #{train_fn}"
