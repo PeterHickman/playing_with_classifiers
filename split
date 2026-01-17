@@ -13,10 +13,7 @@ split = o.option('--split', 'float')
 test_fn = o.option('--testing', 'string')
 train_fn = o.option('--training', 'string')
 
-train_ds, test_ds = DataSet.create_training_and_test(source, split)
+train_ds, test_ds = DataSet.create_training_and_test(source, split, true)
 
 train_ds.save(train_fn)
 test_ds.save(test_fn)
-
-puts "The test dataset has #{test_ds.size} rows and is written to #{test_fn}"
-puts "The training dataset has #{train_ds.size} rows and is written to #{train_fn}"

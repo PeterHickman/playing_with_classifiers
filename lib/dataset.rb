@@ -199,7 +199,7 @@ class DataSet
     f.close
   end
 
-  def self.create_training_and_test(filename, split)
+  def self.create_training_and_test(filename, split, report = false)
     ds = DataSet.new
     ds.from_file(filename)
 
@@ -230,6 +230,22 @@ class DataSet
 
     train_ds = ds.extract_rows(train_rows)
     test_ds = ds.extract_rows(test_rows)
+
+    if report
+      puts "The data set contains #{ds.size} rows"
+      puts "The target for classification is the [#{ds.target}] column"
+      puts
+
+      puts "Targets              :   total :   train :    test"
+      puts "---------------------+---------+---------+--------"
+      x.each do |t, v|
+        puts format("%-20s : %7d : %7d : %7d", t, v[:total], v[:train], v[:test])
+      end
+
+      puts
+      puts "The test dataset has #{test_ds.size} rows and is written to testing.csv"
+      puts "The training dataset has #{train_ds.size} rows and is written to training.csv"
+    end
 
     [train_ds, test_ds]
   end
