@@ -186,5 +186,5 @@ Again `gini` is doing great but `id3` is worse than chance, much much much worse
 
 ## TODO
 
-1. Remove the hardcoded `TARGET` value from the classifies and have the dataset return the target column
+1. Remove the hardcoded `TARGET` value from the classifiers
 2. Make sure that the target column can be anywhere other than the last column
