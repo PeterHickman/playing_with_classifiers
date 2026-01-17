@@ -199,6 +199,53 @@ class DataSet
     f.close
   end
 
+  def self.create_training_and_test(filename, split)
+    ds = DataSet.new
+    ds.from_file(filename)
+
+    x = {}
+    ds.targets.each do |t|
+      x[t] = { total: ds.count(t), test: 0, train: 0, rows: [] }
+    end
+
+    target_index = ds.column_index(ds.target)
+    ds.rows.each_with_index do |row, i|
+      x[row[target_index]][:rows] << i
+    end
+
+    m = 1.0 - split
+    x.each do |t, v|
+      x[t][:test] = [1, (v[:total] * m).to_i].max
+      x[t][:train] = v[:total] - x[t][:test]
+    end
+
+    train_rows = []
+    test_rows = []
+
+    x.each_value do |v|
+      a, b = pick_n(v[:rows], v[:test])
+      train_rows += a
+      test_rows += b
+    end
+
+    train_ds = ds.extract_rows(train_rows)
+    test_ds = ds.extract_rows(test_rows)
+
+    [train_ds, test_ds]
+  end
+
+  def self.pick_n(list, number)
+    r = []
+
+    number.times do
+      i = rand(list.size)
+      r << list[i]
+      list.delete_at(i)
+    end
+
+    [list, r]
+  end
+
   private
 
   def delete_column(name)
