@@ -1,0 +1,127 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH << './lib'
+
+require 'opts'
+require 'dataset'
+require 'gini'
+require 'id3'
+require 'test'
+
+def generate(ds, klass, count)
+  g = klass.new(ds)
+  x = g.walk
+
+  name = "fred_#{count}_#{klass.to_s.downcase}"
+
+  filename = "#{name}.rb"
+
+  f = File.new("#{name}.rb", 'w')
+  f.puts g.report(name, x)
+  f.close
+
+  filename
+rescue SystemStackError => e
+  puts "[FOREST] ##{count} ERROR #{klass.to_s.upcase} #{e}"
+rescue StandardError => e
+  puts "[FOREST] ##{count} ERROR #{klass.to_s.upcase} #{e}"
+end
+
+def factorial(num)
+  (1..num).inject(1) { |prod, i| prod * i }
+end 
+
+def total_combinations(total, number)
+  factorial(total) / (factorial(number) * factorial(total - number))
+end
+
+o = Opts.new(ARGV)
+
+source = o.option('--source', 'string')
+split = o.option('--split', 'float')
+number = o.option('--number', 'integer')
+
+train_ds, test_ds = DataSet.create_training_and_test(source, split)
+
+train_ds.save('forest_training.csv')
+test_ds.save('forest_testing.csv')
+
+ds = DataSet.new
+ds.from_file('forest_training.csv')
+
+if number < 1 || number > ds.columns.size
+  puts "[FOREST] The dataset only has #{ds.columns.size} columns, --number should be 1..#{ds.columns.size}"
+  exit 1
+end
+
+t = total_combinations(ds.columns.size, number)
+
+puts "[FOREST] forest_training.csv has #{ds.columns.size} features"
+puts "[FOREST] There are #{t} combinations of #{number} features"
+
+##
+# Setup
+##
+
+forest = {}
+count = 0
+
+ds.columns.combination(number).each do |c|
+  count += 1
+
+  puts "[FOREST] #{count}/#{t} Using #{c.join(', ')}"
+
+  nds = DataSet.new
+  nds.from_file('forest_training.csv')
+
+  nds.delete_columns(ds.columns - c)
+
+  filename = "forest_#{count}.csv"
+  nds.save(filename)
+
+  forest[count] = { filename: filename, number_of_features: number, features: c.join(' '), id3: -1, gini: -1 }
+end
+
+##
+# Test
+##
+
+forest.each do |count, data|
+  ds = DataSet.new
+  ds.from_file(data[:filename])
+
+  function = generate(ds, ID3, count)
+  if function
+    s = Test.new.test('forest_testing.csv', function)
+    forest[count][:id3] = s
+    puts format('[FOREST] %-15s %8.4f%% success rate', function, s)
+  end
+
+  function = generate(ds, Gini, count)
+  if function
+    s = Test.new.test('forest_testing.csv', function)
+    forest[count][:gini] = s
+    puts format('[FOREST] %-15s %8.4f%% success rate', function, s)
+  end
+end
+
+l = []
+forest.each do |count, data|
+  l << [count, 'id3', data[:id3], data[:number_of_features], data[:features]]
+  l << [count, 'gini', data[:gini], data[:number_of_features], data[:features]]
+end
+
+l.sort! do |a, b|
+  if a[2] == b[2]
+    a[3] <=> b[3]
+  else
+    b[2] <=> a[2]
+  end
+end
+
+r = File.new('report.csv', 'w')
+r.puts ['count', 'method', 'score', 'number of features', 'features'].join(',')
+l.each do |row|
+  r.puts row.join(',')
+end
+r.close
