@@ -64,6 +64,10 @@ class DataSet
     end
   end
 
+  def keep_columns(columns)
+    delete_columns(self.columns - columns)
+  end
+
   def rows_as_hash
     l = []
 

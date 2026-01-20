@@ -74,7 +74,7 @@ ds.columns.combination(number).each do |c|
   nds = DataSet.new
   nds.from_file('forest_training.csv')
 
-  nds.delete_columns(ds.columns - c)
+  nds.keep_columns(c)
 
   filename = "forest_#{count}.csv"
   nds.save(filename)
