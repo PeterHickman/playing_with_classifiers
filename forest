@@ -41,6 +41,10 @@ source = o.option('--source', 'string')
 split = o.option('--split', 'float')
 number = o.option('--number', 'integer')
 
+##
+# Split the dataset
+##
+
 train_ds, test_ds = DataSet.create_training_and_test(source, split)
 
 train_ds.save('forest_training.csv')
@@ -50,7 +54,7 @@ ds = DataSet.new
 ds.from_file('forest_training.csv')
 
 if number < 1 || number > ds.columns.size
-  puts "[FOREST] The dataset only has #{ds.columns.size} columns, --number should be 1..#{ds.columns.size}"
+  puts "[FOREST] The dataset only has #{ds.columns.size} columns, --number should be from 1 to #{ds.columns.size}"
   exit 1
 end
 
