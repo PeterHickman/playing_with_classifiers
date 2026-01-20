@@ -18,7 +18,7 @@ The output is in `fred.rb` and is the Ruby code that will return the classificat
 ```ruby
 # Created: 2025-12-21 14:48:40 +0000
 # Rows: 150
-# Columns: petal_length, petal_width, sepal_length
+# Features: petal_length, petal_width, sepal_length
 # Classifier: Gini
 # Elapsed: 0.00376 seconds
 #
@@ -81,7 +81,7 @@ The `data` directory contains some sample datasets. They are essentially csv fil
 @species target
 ```
 
-The names appear in the same order as the columns of data and the second value can be either `float`, `integer`, `string` or `target`. These are less statements of what the data is than how the data will be handled. This is a work in progress and things will change
+The names appear in the same order as the columns of data and the second value can be either `float`, `integer`, `boolean`, `string` or `target`. These are less statements of what the data is than how the data will be handled. This is a work in progress and things will change
 
 The last column is the target, the one that we will be output when trying to classify something. For the time being it has to be the last one. This will, hopefully, change
 
@@ -119,7 +119,7 @@ The training dataset has 105 rows and is written to training.csv
 [TEST] fred_id3 has a 77.7778% success rate
 ```
 
-What has happened here is the data, `data/iris.csv`,  has been split into two new datasets. One for training that contains 70% of the original data and another dataset that contains the remaining 30% to test the function that was created
+What has happened here is the data, `data/iris.csv`,  has been split into two new datasets. One for training that contains 70% of the original data and another dataset that contains the remaining 30% to test the function that was created. Both datasets have the same proportions of target features
 
 For good measure, and because it's automated and takes no extra effort, we have built a `gini` and `id3` function and tested each against the test dataset. `gini` got 95% accuracy and `id3` got 77%. Not sure I would trust something that is only 77% accurate but 95% sounds good
 
@@ -183,6 +183,88 @@ The training dataset has 961 rows and is written to training.csv
 ```
 
 Again `gini` is doing great but `id3` is worse than chance, much much much worse than chance. It's as if it is deliberately picking the wrong answers (perhaps I shouldn't anthropomorphise my code). `id3` did great with the blood test data but fails here
+
+Each has it's own strengths
+
+## How many features?
+
+For a moment lets go back to the iris dataset we first looked at. In the comments of the Gini function that was created we have `Features: petal_length, petal_width, sepal_length`. The dataset itself contains four features but `sepal_width` was not necessary to build a classifier with a 95% success rate. Not all features are necessary. It's part of the process, if we knew what features we would need before we went and measured things then we could just write out the rules by hand
+
+You collect as much data as you can and let the classifier find out what we actually need
+
+Lets take this further, the `blood_samples_dataset_balanced.csv` dataset has 24 features. Lets see how that works out
+
+```
+$ ./wf data/blood_samples_dataset_balanced.csv
+The data set contains 2351 rows
+The target for classification is the [disease] column
+
+Targets              :   total :   train :    test
+---------------------+---------+---------+--------
+Healthy              :     556 :     390 :     166
+Diabetes             :     540 :     378 :     162
+Thalasse             :     509 :     357 :     152
+Anemia               :     623 :     437 :     186
+Thromboc             :     123 :      87 :      36
+
+The test dataset has 702 rows and is written to testing.csv
+The training dataset has 1649 rows and is written to training.csv
+
+[GINI] Input training.csv
+[GINI] Output fred_gini.rb
+[GINI] Elapsed 1.513557
+
+[ID3] Input training.csv
+[ID3] Output fred_id3.rb
+[ID3] Elapsed 0.12932
+
+[TEST] fred_gini.rb has a 100.0000% success rate
+[TEST] fred_id3.rb has a 100.0000% success rate
+```
+
+The Gini classifier used only 12 features, the ID3 classifier used only **one**!!! Both scored 100%
+
+The ID3 classifier is overfitting. The glucose values are given at such an absurd precision that a each outcome can be unambiguously associated with a target classification. Never blindly trust what comes out of the system, question everything. Perhaps rounding the data to 2 decimal places would be the way to approach this
+
+So what can we do when we have lots of features. Well one technique is to pick a subset of the features at random and check them out. Generally the rule is if you have `X` features the subset size should be `sqrt(X)`. So for 24 features we will take a subset of 5
+
+"Which features should I pick?" you ask. All of them. All combinations of 5 features from the original 24. All 42,504 of them in this case. Thats going to be a lot of work. No problem we have a program and copious amounts of tea to drink
+
+```
+$  ❯ ./forest --source data/blood_samples_dataset_balanced.csv --split .7 --number 5
+[FOREST] forest_training.csv has 24 features
+[FOREST] There are 42504 combinations of 5 features
+[FOREST] 1/42504 Using glucose, cholesterol, hemoglobin, platelets, white_blood_cells
+[FOREST] 2/42504 Using glucose, cholesterol, hemoglobin, platelets, red_blood_cells
+[FOREST] 3/42504 Using glucose, cholesterol, hemoglobin, platelets, hematocrit
+[FOREST] 4/42504 Using glucose, cholesterol, hemoglobin, platelets, mean_corpuscular_volume
+...
+[FOREST] 42499/42504 Using alt, ast, heart_rate, creatinine, troponin
+[FOREST] 42500/42504 Using alt, ast, heart_rate, creatinine, c_reactive_protein
+[FOREST] 42501/42504 Using alt, ast, heart_rate, troponin, c_reactive_protein
+[FOREST] 42502/42504 Using alt, ast, creatinine, troponin, c_reactive_protein
+[FOREST] 42503/42504 Using alt, heart_rate, creatinine, troponin, c_reactive_protein
+[FOREST] 42504/42504 Using ast, heart_rate, creatinine, troponin, c_reactive_protein
+[FOREST] fred_1_id3.rb   100.0000% success rate
+[FOREST] fred_1_gini.rb  100.0000% success rate
+[FOREST] fred_2_id3.rb   100.0000% success rate
+[FOREST] fred_2_gini.rb  100.0000% success rate
+[FOREST] fred_3_id3.rb   100.0000% success rate
+[FOREST] fred_3_gini.rb  100.0000% success rate
+[FOREST] fred_4_id3.rb   100.0000% success rate
+[FOREST] fred_4_gini.rb  100.0000% success rate
+[FOREST] fred_5_id3.rb   100.0000% success rate
+...
+[FOREST] fred_42501_gini.rb 100.0000% success rate
+[FOREST] fred_42502_id3.rb 100.0000% success rate
+[FOREST] fred_42502_gini.rb 100.0000% success rate
+[FOREST] fred_42503_id3.rb 100.0000% success rate
+[FOREST] fred_42503_gini.rb 100.0000% success rate
+[FOREST] fred_42504_id3.rb 100.0000% success rate
+[FOREST] fred_42504_gini.rb 100.0000% success rate
+```
+
+I lied, I actually went to bed and let this run. The results are written to `report.csv` and both ID3 and Gini scored 100% for all combinations of 5 features. Good to know that we only need 5 of the 24 features to make a diagnosis. Except for ID3. Once again it fixated on the absurd precision of the features and only used 1 of the features
 
 ## TODO
 
