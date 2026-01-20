@@ -26,7 +26,7 @@ class Gini
 
     t << "# Created: #{Time.now}"
     t << "# Rows: #{@ds.size}"
-    t << "# Features: #{@used.to_a.join(', ')}"
+    t << "# Features: (#{@used.size}) #{@used.to_a.join(', ')}"
     t << '# Classifier: Gini'
     t << "# Elapsed: #{@elapsed} seconds"
     t << '#'

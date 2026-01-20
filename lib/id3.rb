@@ -30,7 +30,7 @@ class ID3
 
     t << "# Created: #{Time.now}"
     t << "# Rows: #{@ds.size}"
-    t << "# Features: #{@used.to_a.join(', ')}"
+    t << "# Features: (#{@used.size}) #{@used.to_a.join(', ')}"
     t << '# Classifier: ID3'
     t << '#'
     t << "def #{name}(data)"
