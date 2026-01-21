@@ -18,7 +18,7 @@ The output is in `fred.rb` and is the Ruby code that will return the classificat
 ```ruby
 # Created: 2025-12-21 14:48:40 +0000
 # Rows: 150
-# Features: petal_length, petal_width, sepal_length
+# Features: (3) petal_length, petal_width, sepal_length
 # Classifier: Gini
 # Elapsed: 0.00376 seconds
 #
@@ -224,7 +224,7 @@ The training dataset has 1649 rows and is written to training.csv
 
 The Gini classifier used only 12 features, the ID3 classifier used only **one**!!! Both scored 100%
 
-The ID3 classifier is overfitting. The glucose values are given at such an absurd precision that a each outcome can be unambiguously associated with a target classification. Never blindly trust what comes out of the system, question everything. Perhaps rounding the data to 2 decimal places would be the way to approach this
+The ID3 classifier is overfitting. The glucose values are given at such an absurd precision that each outcome can be unambiguously associated with a target classification. Never blindly trust what comes out of the system, question everything. Perhaps rounding the data to 2 decimal places would be the way to approach this
 
 So what can we do when we have lots of features. Well one technique is to pick a subset of the features at random and check them out. Generally the rule is if you have `X` features the subset size should be `sqrt(X)`. So for 24 features we will take a subset of 5
 
