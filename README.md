@@ -266,7 +266,23 @@ $  ❯ ./forest --source data/blood_samples_dataset_balanced.csv --split .7 --nu
 
 I lied, I actually went to bed and let this run. The results are written to `report.csv` and both ID3 and Gini scored 100% for all combinations of 5 features. Good to know that we only need 5 of the 24 features to make a diagnosis. Except for ID3. Once again it fixated on the absurd precision of the features and only used 1 of the features
 
-## TODO
+## Other version
 
-1. Remove the hardcoded `TARGET` value from the classifiers
-2. Make sure that the target column can be anywhere other than the last column
+In the `other_version` directory is a version of the ID3 classifier that I found on the interwebs. I cannot find it again so sorry for the original author for not naming them. But it is interesting in that the data is uses is not the csv based columnar dataset we are using. It just lists the known features
+
+```
+no,dirty,showing teeth,hair raised,barking
+yes,growling,showing teeth,dirty,barking
+no,collar,showing teeth,dirty,barking
+no,barking,growling,clean,collar
+yes,growling,hair raised,barking
+no,hair raised,collar,clean,barking
+no,collar,clean,growling,barking
+no,barking
+yes,showing teeth,dirty,barking,hair raised
+no,dirty,collar,barking,showing teeth
+yes,barking,hair raised,dirty,showing teeth
+```
+
+It can be turned into csv based data but it shows you that there are other approaches
+
