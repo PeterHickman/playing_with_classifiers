@@ -1,0 +1,11 @@
+no,dirty,showing teeth,hair raised,barking
+yes,growling,showing teeth,dirty,barking
+no,collar,showing teeth,dirty,barking
+no,barking,growling,clean,collar
+yes,growling,hair raised,barking
+no,hair raised,collar,clean,barking
+no,collar,clean,growling,barking
+no,barking
+yes,showing teeth,dirty,barking,hair raised
+no,dirty,collar,barking,showing teeth
+yes,barking,hair raised,dirty,showing teeth
