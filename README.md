@@ -2,7 +2,7 @@
 
 ## What are classifiers?
 
-I'm thinking of an animal and you have 20 questions to try and identify the animal. Classifiers in AI (also known a decision trees) is a technique that takes a list of all the animals and looks for the best questions to ask to find out what the animal is
+I'm thinking of an animal and you have 20 questions to try and identify the animal. Classifiers in AI (also known a decision trees) are a technique that takes a list of all the animals and looks for the best questions to ask to find out what the animal is
 
 The classic classifier example is the Iris dataset. This is a list of measurements from three species of irises. The classifier algorithm will spit out a series of questions that will quickly classify any new data. For example...
 
@@ -266,9 +266,17 @@ $  ❯ ./forest --source data/blood_samples_dataset_balanced.csv --split .7 --nu
 
 I lied, I actually went to bed and let this run. The results are written to `report.csv` and both ID3 and Gini scored 100% for all combinations of 5 features. Good to know that we only need 5 of the 24 features to make a diagnosis. Except for ID3. Once again it fixated on the absurd precision of the features and only used 1 of the features
 
+## A stupid idea
+
+There is a dataset known as [NIST Special Database 19](https://www.nist.gov/srd/nist-special-database-19) which is a collection of images of hand written characters, 0 to 9, a to z. Each image is 128 by 128 pixels and there are 1,545,923 images in all. This is go to example for neural networks. Lets see if we can run through a classifier
+
+The first step is to turn each image into a row in the dataset. Each row will have 16,384 columns of data (128 x 128 pixels per image). The images are black and white so the values are just 0 and 1. Lets be honest here, this goes beyond stupid. So we will resize the images to 32 x 32 which is now a greyscale image and we only have 1,024 columns of data. I let it run and waited ...
+
+A week later it was still running. I killed it and started to rewrite it in Go
+
 ## Other version
 
-In the `other_version` directory is a version of the ID3 classifier that I found on the interwebs. I cannot find it again so sorry for the original author for not naming them. But it is interesting in that the data is uses is not the csv based columnar dataset we are using. It just lists the known features
+In the `other_version` directory is a version of the ID3 classifier that I found on the interwebs. I cannot find it again so sorry to the original author for not naming them. But it is interesting in that the data is uses is not the csv based columnar dataset we are using. It just lists the known features
 
 ```
 no,dirty,showing teeth,hair raised,barking
