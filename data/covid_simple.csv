@@ -1,0 +1,19 @@
+@fever string
+@cough string
+@breathing_issues string
+@infected target
+
+no,no,no,no
+yes,yes,yes,yes
+yes,yes,no,no
+yes,no,yes,yes
+yes,yes,yes,yes
+no,yes,no,no
+yes,no,yes,yes
+yes,no,yes,yes
+no,yes,yes,yes
+yes,yes,no,yes
+no,yes,no,no
+no,yes,yes,yes
+no,yes,yes,no
+yes,yes,no,no
