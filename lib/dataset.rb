@@ -3,9 +3,11 @@
 require 'set'
 
 class DataSet
-  attr_reader :target, :rows
+  NUMERIC = 'numeric'
+  CATAGORICAL = 'catagorical'
+  TARGET = 'target'
 
-  GAPS = %w[integer float].freeze
+  attr_reader :target, :rows
 
   def initialize(columns = {}, indexed = {}, target = nil)
     @columns = columns.dup
@@ -79,7 +81,7 @@ class DataSet
   end
 
   def gaps(name)
-    if GAPS.include? @columns[name][:type]
+    if @columns[name][:type] == NUMERIC
       sparse_gaps(name)
     else
       values(name)
@@ -91,7 +93,7 @@ class DataSet
     right = DataSet.new(@columns, @indexed, @target)
 
     index = @columns[name][:index]
-    if GAPS.include? @columns[name][:type]
+    if @columns[name][:type] == NUMERIC
       @rows.each do |row|
         if row[index] < value
           left.add(row)
@@ -168,17 +170,15 @@ class DataSet
     index = 0
     line.split(',').each do |item|
       case @columns[@indexed[index]][:type]
-      when 'float'
+      when NUMERIC
         row << if @columns[@indexed[index]][:other].nil?
                  item.to_f
                else
                  item.to_f.round(@columns[@indexed[index]][:other])
                end
-      when 'integer'
-        row << item.to_i
-      when 'string'
+      when CATAGORICAL
         row << item
-      when 'target'
+      when TARGET
         row << item
       end
 
@@ -329,19 +329,19 @@ class DataSet
   def column(name, type, other)
     raise "Column called [#{name}] already defined" if @columns.key?(name)
 
-    if type == 'target'
+    if type == TARGET
       raise "Target already defined as [#{@target}]" unless @target.nil?
 
       @target = name
     end
 
-    if type == 'float'
+    if type == NUMERIC
       ##
-      # Allow us to define the rounding on floats
+      # Allow us to define the rounding on numerics
       ##
       other = other.to_i unless other.nil?
     elsif other
-      raise "Other defined on #{type} for #{name}. Only available for float"
+      raise "Other defined on #{type} for #{name}. Only available for numeric"
     end
 
     index = @columns.size
