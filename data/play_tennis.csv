@@ -1,20 +1,3 @@
-@outlook catagorical
-@temperature catagorical
-@humidity catagorical
-@windy catagorical
-@play target
-
-sunny,hot,high,false,no
-sunny,hot,high,true,no
-overcast,hot,high,false,yes
-rain,mild,high,false,yes
-rain,cool,normal,false,yes
-rain,cool,normal,true,no
-overcast,cool,normal,true,yes
-sunny,mild,high,false,no
-sunny,cool,normal,false,yes
-rain,mild,normal,false,yes
-sunny,mild,normal,true,yes
-overcast,mild,high,true,yes
-overcast,hot,normal,false,yes
-rain,mild,high,true,no
+version https://git-lfs.github.com/spec/v1
+oid sha256:0e8bbe18bab94d10112c84e7bba8dcfd24b7386aed97f66799c01a55a7209fe6
+size 471
