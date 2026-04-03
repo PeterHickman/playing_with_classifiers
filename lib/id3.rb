@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'set'
+require 'dataset'
 
 class ID3
   attr_reader :elapsed
@@ -124,21 +125,19 @@ class ID3
     winner_name
   end
 
-  def build_tree(ds, tree = nil)
+  def build_tree(ds, depth = 30)
+    return 'stack too deep' if depth.zero?
+
     winner = find_winner(ds)
 
-    tree = { winner => {} } if tree.nil?
+    tree = { winner => {} }
 
     ds.values(winner).each do |value|
       nds = ds.extract(winner, value)
-      value = "'#{value}'" if @ds.column_type(winner) == 'string'
+      value = "'#{value}'" if @ds.column_type(winner) == DataSet::CATAGORICAL
 
       targets = nds.targets
-      tree[winner][value] = if targets.size == 1
-                              targets.first
-                            else
-                              build_tree(nds)
-                            end
+      tree[winner][value] = targets.size == 1 ? targets.first : build_tree(nds, depth - 1)
     end
 
     tree
