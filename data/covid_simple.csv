@@ -1,6 +1,6 @@
-@fever string
-@cough string
-@breathing_issues string
+@fever catagorical
+@cough catagorical
+@breathing_issues catagorical
 @infected target
 
 no,no,no,no

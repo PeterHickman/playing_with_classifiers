@@ -13,10 +13,10 @@
 # PetalWidthCm
 # Species
 
-@sepal_length float
-@sepal_width float
-@petal_length float
-@petal_width float
+@sepal_length numeric
+@sepal_width numeric
+@petal_length numeric
+@petal_width numeric
 @species target
 
 5.1,3.5,1.4,0.2,setosa

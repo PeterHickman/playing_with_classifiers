@@ -34,10 +34,10 @@
 #   - fake
 #   - real
 
-@variance float
-@skewness float
-@curtosis float
-@entropy float
+@variance numeric
+@skewness numeric
+@curtosis numeric
+@entropy numeric
 @class target
 
 3.6216,8.6661,-2.8073,-0.44699,fake

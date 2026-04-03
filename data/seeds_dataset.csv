@@ -1,12 +1,12 @@
 # https://archive.ics.uci.edu/dataset/236/seeds
 
-@area float
-@perimeter float
-@compactness float
-@length float
-@width float
-@asymmetry_coefficient float
-@length_of_kernel_groove float
+@area numeric
+@perimeter numeric
+@compactness numeric
+@length numeric
+@width numeric
+@asymmetry_coefficient numeric
+@length_of_kernel_groove numeric
 @variety target
 
 15.26,14.84,0.871,5.763,3.312,2.221,5.22,kama

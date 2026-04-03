@@ -139,36 +139,36 @@
 #
 # 9. Class distribution: 357 benign, 212 malignant
 
-@radius_1 float
-@texture_1 float
-@perimeter_1 float
-@area_1 float
-@smoothness_1 float
-@compactness_1 float
-@concavity_1 float
-@concave_points_1 float
-@symmetry_1 float
-@fractal_dimension_1 float
-@radius_2 float
-@texture_2 float
-@perimeter_2 float
-@area_2 float
-@smoothness_2 float
-@compactness_2 float
-@concavity_2 float
-@concave_points_2 float
-@symmetry_2 float
-@fractal_dimension_2 float
-@radius_3 float
-@texture_3 float
-@perimeter_3 float
-@area_3 float
-@smoothness_3 float
-@compactness_3 float
-@concavity_3 float
-@concave_points_3 float
-@symmetry_3 float
-@fractal_dimension_3 float
+@radius_1 numeric
+@texture_1 numeric
+@perimeter_1 numeric
+@area_1 numeric
+@smoothness_1 numeric
+@compactness_1 numeric
+@concavity_1 numeric
+@concave_points_1 numeric
+@symmetry_1 numeric
+@fractal_dimension_1 numeric
+@radius_2 numeric
+@texture_2 numeric
+@perimeter_2 numeric
+@area_2 numeric
+@smoothness_2 numeric
+@compactness_2 numeric
+@concavity_2 numeric
+@concave_points_2 numeric
+@symmetry_2 numeric
+@fractal_dimension_2 numeric
+@radius_3 numeric
+@texture_3 numeric
+@perimeter_3 numeric
+@area_3 numeric
+@smoothness_3 numeric
+@compactness_3 numeric
+@concavity_3 numeric
+@concave_points_3 numeric
+@symmetry_3 numeric
+@fractal_dimension_3 numeric
 @diagnosis target
 
 17.99,10.38,122.8,1001,0.1184,0.2776,0.3001,0.1471,0.2419,0.07871,1.095,0.9053,8.589,153.4,0.006399,0.04904,0.05373,0.01587,0.03003,0.006193,25.38,17.33,184.6,2019,0.1622,0.6656,0.7119,0.2654,0.4601,0.1189,malignant

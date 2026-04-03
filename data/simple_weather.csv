@@ -2,7 +2,7 @@
 @temperature catagorical
 @humidity catagorical
 @windy catagorical
-@play target
+@label target
 
 sunny,hot,high,false,no
 sunny,hot,high,true,no
