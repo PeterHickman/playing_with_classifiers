@@ -238,6 +238,7 @@ class DataSet
     if report
       puts "The data set contains #{ds.size} rows"
       puts "The target for classification is the [#{ds.target}] column"
+      puts "There are #{x.size} unique values for #{ds.target}"
       puts
 
       puts "Targets              :   total :   train :    test"
