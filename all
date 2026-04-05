@@ -30,4 +30,6 @@ all() {
 }
 
 all pure_random
+all pure_balanced
 all unique_random
+all unique_balanced

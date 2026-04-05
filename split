@@ -19,7 +19,7 @@ source = o.option('--source', 'string')
 split = o.option('--split', 'float')
 test_fn = o.option('--testing', 'string')
 train_fn = o.option('--training', 'string')
-split_method = o.option('--method', 'string', 'balanced')
+split_method = o.option('--method', 'string', 'pure_random')
 
 unless SPLIT_METHODS.include?(split_method)
   raise "Unknown split method [#{split_method}]. Pick one of #{SPLIT_METHODS}"
