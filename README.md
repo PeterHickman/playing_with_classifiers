@@ -74,117 +74,143 @@ Compare the output of each on the iris dataset to see the differences. `id3` has
 The `data` directory contains some sample datasets. They are essentially csv files but you can have comments and blank lines. Also the column headers are replace with a new syntax
 
 ```
-@sepal_length float
-@sepal_width float
-@petal_length float
-@petal_width float
+@sepal_length numeric
+@sepal_width numeric
+@petal_length numeric
+@petal_width numeric
 @species target
 ```
 
-The names appear in the same order as the columns of data and the second value can be either `float`, `integer`, `boolean`, `string` or `target`. These are less statements of what the data is than how the data will be handled. This is a work in progress and things will change
+The names appear in the same order as the columns of data and the second value can be either `numeric `, `catagorical`, or `target`. These are less statements of what the data is than how the data will be handled
 
 The last column is the target, the one that we will be output when trying to classify something. For the time being it has to be the last one. This will, hopefully, change
 
-In some examples you might see numbers being used to represent something such as gender, `0 = male`, `1 = female`, `2 = unknown`. The problem here is that the classifiers see numbers as being numeric rather than symbols. Age, for example, makes sense as a number. `18 < 32` means something when the numbers represent ages. `0 < 2` means nothing when it translates to `male < unknown`
+What is "numeric" data? Well think of things that can be measured as numbers, things like age, height, weight or blood pressure. They are measured in numbers and can be compared as numbers. It makes sense to say that someone's blood pressure is high compared to a base line. You can use a combination of height and weight to determine the level of obesity. Numeric data is measures in numbers and the data can be compared as numbers. Basically we can _rank_ numerical data by the value and it will make sense
 
-Other classifiers use numbers for everything because numbers are simpler for the computer to handle especially when you have a _lot_ of data. We can keep things more relatable with strings for such data
+What about eye colour? There is no way to measure the colour of an eye as a number and other than saying that blue eyes are not brown eyes we cannot rank eye colour. Thus eye colour is catagorical
+
+Classifiers use numbers for everything because numbers are simpler for the computer to handle especially when you have a _lot_ of data. We can keep things more relatable with strings for such data
 
 ## Sounds good. Is it really though?
 
 The thing is the function that it has created a function but how good is it? Good question. Well we have to do something different
 
 ```
-$ ./wf data/iris.csv
+$ ./wf pure_random data/iris.csv
 The data set contains 150 rows
 The target for classification is the [species] column
+There are 3 unique values for species
+There are 3 species values in the split data
+Split using the pure_random method
 
 Targets              :   total :   train :    test
 ---------------------+---------+---------+--------
-setosa               :      50 :      35 :      15
-versicolor           :      50 :      35 :      15
-virginica            :      50 :      35 :      15
+virginica            :      46 :      35 :      11
+versicolor           :      55 :      40 :      15
+setosa               :      49 :      30 :      19
 
 The test dataset has 45 rows and is written to testing.csv
 The training dataset has 105 rows and is written to training.csv
 
 [GINI] Input training.csv
 [GINI] Output fred_gini.rb
-[GINI] Elapsed 0.002627
+[GINI] Elapsed 0.002345
 
 [ID3] Input training.csv
 [ID3] Output fred_id3.rb
-[ID3] Elapsed 0.001121
+[ID3] Elapsed 0.000893
 
-[TEST] fred_gini has a 95.5556% success rate
-[TEST] fred_id3 has a 77.7778% success rate
+[TEST] fred_gini.rb has a 100.0000% success rate
+[TEST] fred_id3.rb has a 95.5556% success rate
 ```
 
-What has happened here is the data, `data/iris.csv`,  has been split into two new datasets. One for training that contains 70% of the original data and another dataset that contains the remaining 30% to test the function that was created. Both datasets have the same proportions of target features
+What has happened here is the data, `data/iris.csv`,  has been split into two new datasets. One for training that contains 70% of the original data and another dataset that contains the remaining 30% to test the function that was created. There are four ways to split the data and we have used `pure_random` here. We will explain it in a later section
 
-For good measure, and because it's automated and takes no extra effort, we have built a `gini` and `id3` function and tested each against the test dataset. `gini` got 95% accuracy and `id3` got 77%. Not sure I would trust something that is only 77% accurate but 95% sounds good
+For good measure, and because it's automated and takes no extra effort, we have built a `gini` and `id3` function and tested each against the test dataset. `gini` got 100% accuracy and `id3` got 95%
 
-But be cautious here, this was only trained on 105 rows. Thats not a lot of data. More data is better. Lets try again with another dataset
+But be cautious here, this was only trained on 150 rows. Thats not a lot of data. More data is better. Lets try again with another dataset
 
 ```
-$ ./wf data/blood_samples_dataset_balanced.csv
+$ ./wf pure_random data/blood_samples_dataset_balanced.csv
 The data set contains 2351 rows
 The target for classification is the [disease] column
+There are 5 unique values for disease
+There are 5 disease values in the split data
+Split using the pure_random method
 
 Targets              :   total :   train :    test
 ---------------------+---------+---------+--------
-Healthy              :     556 :     390 :     166
-Diabetes             :     540 :     378 :     162
-Thalasse             :     509 :     357 :     152
-Anemia               :     623 :     437 :     186
-Thromboc             :     123 :      87 :      36
+Anemia               :     636 :     450 :     186
+Thalasse             :     470 :     331 :     139
+Thromboc             :     132 :      94 :      38
+Diabetes             :     588 :     414 :     174
+Healthy              :     525 :     356 :     169
 
-The test dataset has 702 rows and is written to testing.csv
-The training dataset has 1649 rows and is written to training.csv
+The test dataset has 706 rows and is written to testing.csv
+The training dataset has 1645 rows and is written to training.csv
 
 [GINI] Input training.csv
 [GINI] Output fred_gini.rb
-[GINI] Elapsed 1.770575
+[GINI] Elapsed 2.185256
 
 [ID3] Input training.csv
 [ID3] Output fred_id3.rb
-[ID3] Elapsed 0.132669
+[ID3] Elapsed 0.141209
 
-[TEST] fred_gini has a 100.0000% success rate
-[TEST] fred_id3 has a 100.0000% success rate
+[TEST] fred_gini.rb has a 100.0000% success rate
+[TEST] fred_id3.rb has a 100.0000% success rate
 ```
 
-Much more data and even 100% accuracy. But be aware the `Thromboc` classification was trained on only 87 rows. So perhaps a little caution here still
+Much more data and even 100% accuracy. But be aware the `Thromboc` classification was trained on only 94 rows. So perhaps a little caution here still
 
 Finally another one
 
 ```
-$ ./wf data/banknotes.csv
+$ ./wf pure_random data/banknotes.csv
 The data set contains 1372 rows
 The target for classification is the [class] column
+There are 2 unique values for class
+There are 2 class values in the split data
+Split using the pure_random method
 
 Targets              :   total :   train :    test
 ---------------------+---------+---------+--------
-fake                 :     762 :     534 :     228
-real                 :     610 :     427 :     183
+fake                 :     747 :     508 :     239
+real                 :     625 :     452 :     173
 
-The test dataset has 411 rows and is written to testing.csv
-The training dataset has 961 rows and is written to training.csv
+The test dataset has 412 rows and is written to testing.csv
+The training dataset has 960 rows and is written to training.csv
 
 [GINI] Input training.csv
 [GINI] Output fred_gini.rb
-[GINI] Elapsed 0.47708
+[GINI] Elapsed 0.400103
 
 [ID3] Input training.csv
 [ID3] Output fred_id3.rb
-[ID3] Elapsed 0.184268
+[ID3] Elapsed 0.136165
 
-[TEST] fred_gini has a 98.5401% success rate
-[TEST] fred_id3 has a 2.9197% success rate
+[TEST] fred_gini.rb has a 98.3010% success rate
+[TEST] fred_id3.rb has a 51.6990% success rate
 ```
 
-Again `gini` is doing great but `id3` is worse than chance, much much much worse than chance. It's as if it is deliberately picking the wrong answers (perhaps I shouldn't anthropomorphise my code). `id3` did great with the blood test data but fails here
+Again `gini` is doing great but `id3` is only slightly better than chance
 
 Each has it's own strengths
+
+## Splitting the data
+
+To generate a solution we need data to train it on. We also need data to test the solution on. So we take source data and split it into two parts, the training dataset and the testing dataset. I have a training dataset that is 70% of the size of the original data and 30% for the testing data
+
+There are four methods to split the data available here
+
+1. **pure_random** If we have an original dataset of 10,000 rows then we will create the training dataset by picking 7,000 rows from the original dataset and 3,000 rows for the testing. There are two features of this method. The training and test datasets will contain duplicate rows and as a result some rows will appear in both the training and testing datasets. Also targets can be under/over represented in their respective dataset compared to the original dataset, or even missing entirely
+2. **unique_random** A variation of the above except this time each row from the original dataset will appear in either dataset. This avoid the problem of duplicates but does not address the balance of targets in the new datasets
+3. **pure_balanced** In an attempt to address the balance issue each new dataset will have the same proportion of target rows in the new datasets as was in the original. It behaves like pure\_random but preserves the balance of targets and also has the same drawbacks as pure\_random too
+4. **unique_balanced** Just as unique\_random sought to improve on pure\_random this method attempts to fix the target balance issue and improve on pure\_balanced
+
+The method that seems to work the best is **pure_random**. Not completely intuitive given that it has the most detriments but I've tested this multiple times with the data here and it always comes out on top, perhaps only by a few percentage points, but consistently ahead of the others
+
+Sometimes it does not pay to overthink. Just accept what the data tells you
 
 ## How many features?
 
@@ -224,7 +250,7 @@ The training dataset has 1649 rows and is written to training.csv
 
 The Gini classifier used only 12 features, the ID3 classifier used only **one**!!! Both scored 100%
 
-The ID3 classifier is overfitting. The glucose values are given at such an absurd precision that each outcome can be unambiguously associated with a target classification. Never blindly trust what comes out of the system, question everything. Perhaps rounding the data to 2 decimal places would be the way to approach this
+The ID3 classifier is overfitting. The glucose values are given at such an absurd precision that each outcome can be unambiguously associated with a target classification. Never blindly trust what comes out of the system, question everything. Rounding the data to 2 decimal places only adds one more feature for ID3 to use. ID3 is not suited to this dataset
 
 So what can we do when we have lots of features. Well one technique is to pick a subset of the features at random and check them out. Generally the rule is if you have `X` features the subset size should be `sqrt(X)`. So for 24 features we will take a subset of 5
 
@@ -265,14 +291,6 @@ $  ❯ ./forest --source data/blood_samples_dataset_balanced.csv --split .7 --nu
 ```
 
 I lied, I actually went to bed and let this run. The results are written to `report.csv` and both ID3 and Gini scored 100% for all combinations of 5 features. Good to know that we only need 5 of the 24 features to make a diagnosis. Except for ID3. Once again it fixated on the absurd precision of the features and only used 1 of the features
-
-## A stupid idea
-
-There is a dataset known as [NIST Special Database 19](https://www.nist.gov/srd/nist-special-database-19) which is a collection of images of hand written characters, 0 to 9, a to z. Each image is 128 by 128 pixels and there are 1,545,923 images in all. This is go to example for neural networks. Lets see if we can run through a classifier
-
-The first step is to turn each image into a row in the dataset. Each row will have 16,384 columns of data (128 x 128 pixels per image). The images are black and white so the values are just 0 and 1. Lets be honest here, this goes beyond stupid. So we will resize the images to 32 x 32 which is now a greyscale image and we only have 1,024 columns of data. I let it run and waited ...
-
-A week later it was still running. I killed it and started to rewrite it in Go
 
 ## Other version
 
