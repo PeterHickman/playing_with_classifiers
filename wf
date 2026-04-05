@@ -1,6 +1,7 @@
 #!/bin/sh
 
-./split --source $1 --split .7 --testing testing.csv --training training.csv
+
+./split --source $2 --split .7 --method $1 --testing testing.csv --training training.csv
 
 echo
 

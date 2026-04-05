@@ -1,24 +1,33 @@
 #!/bin/sh
 
 process() {
-  echo == $1
-  ./wf $1
+  local METHOD=$1
+  local DATASET=$2
+  echo == ${DATASET}
+  ./wf ${METHOD} ${DATASET}
 }
 
-process data/abalone.csv
-process data/banknotes.csv
-process data/blood_samples_dataset_balanced.csv
-process data/breast_cancer.csv
-process data/crop_recommendation.csv
-process data/diabetes_prediction_dataset.csv
-process data/diabetes.csv
-process data/diamond_buckets.csv
-process data/diamond.csv
-process data/heart_statlog_cleveland_hungary_final.csv
-process data/iris.csv
-process data/play_tennis.csv
-process data/seeds_dataset.csv
-process data/simple_weather.csv
-process data/weather_classification_data.csv
-process data/weather_forecast_data.csv
-process data/wine.csv
+all() {
+  local METHOD=$1
+
+  process ${METHOD} data/abalone.csv
+  process ${METHOD} data/banknotes.csv
+  process ${METHOD} data/blood_samples_dataset_balanced.csv
+  process ${METHOD} data/breast_cancer.csv
+  process ${METHOD} data/crop_recommendation.csv
+  process ${METHOD} data/diabetes_prediction_dataset.csv
+  process ${METHOD} data/diabetes.csv
+  process ${METHOD} data/diamond_buckets.csv
+  process ${METHOD} data/diamond.csv
+  process ${METHOD} data/heart_statlog_cleveland_hungary_final.csv
+  process ${METHOD} data/iris.csv
+  process ${METHOD} data/play_tennis.csv
+  process ${METHOD} data/seeds_dataset.csv
+  process ${METHOD} data/simple_weather.csv
+  process ${METHOD} data/weather_classification_data.csv
+  process ${METHOD} data/weather_forecast_data.csv
+  process ${METHOD} data/wine.csv
+}
+
+all pure_random
+all unique_random

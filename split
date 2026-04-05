@@ -6,14 +6,26 @@ $LOAD_PATH << './lib'
 require 'opts'
 require 'dataset'
 
+SPLIT_METHODS = %w[
+  pure_random
+  unique_random
+  pure_balanced
+  unique_balanced
+]
+
 o = Opts.new(ARGV)
 
 source = o.option('--source', 'string')
 split = o.option('--split', 'float')
 test_fn = o.option('--testing', 'string')
 train_fn = o.option('--training', 'string')
+split_method = o.option('--method', 'string', 'balanced')
 
-train_ds, test_ds = DataSet.create_training_and_test(source, split, true)
+unless SPLIT_METHODS.include?(split_method)
+  raise "Unknown split method [#{split_method}]. Pick one of #{SPLIT_METHODS}"
+end
+
+train_ds, test_ds = DataSet.create_training_and_test(source, split, split_method, true)
 
 train_ds.save(train_fn)
 test_ds.save(test_fn)

@@ -203,33 +203,95 @@ class DataSet
     f.close
   end
 
-  def self.create_training_and_test(filename, split, report = false)
+  # pure_balanced
+  # unique_balanced
+
+  def self.split_pure_random(ds, split)
+    x = {}
+
+    tr_count = (ds.size * split).to_i
+    te_count = ds.size - tr_count
+
+    train_rows = tr_count.times.map { rand(ds.size) }
+    test_rows = te_count.times.map { rand(ds.size) }
+
+    train_rows.each do |row|
+      target = ds.rows[row][-1]
+      x[target] = { total: 0, train: 0, test: 0 } unless x.key?(target)
+      x[target][:total] += 1
+      x[target][:train] += 1
+    end
+
+    test_rows.each do |row|
+      target = ds.rows[row][-1]
+      x[target] = { total: 0, train: 0, test: 0 } unless x.key?(target)
+      x[target][:total] += 1
+      x[target][:test] += 1
+    end
+
+    [x, train_rows, test_rows]
+  end
+
+  def self.split_unique_random(ds, split)
+    n = (split * ds.size).to_i
+    test_rows, train_rows = pick_n((0...ds.size).to_a, n)
+
+    x = {}
+
+    train_rows.each do |row|
+      target = ds.rows[row][-1]
+      x[target] = { total: 0, train: 0, test: 0 } unless x.key?(target)
+      x[target][:total] += 1
+      x[target][:train] += 1
+    end
+
+    test_rows.each do |row|
+      target = ds.rows[row][-1]
+      x[target] = { total: 0, train: 0, test: 0 } unless x.key?(target)
+      x[target][:total] += 1
+      x[target][:test] += 1
+    end
+
+    [x, train_rows, test_rows]
+  end
+
+  def self.create_training_and_test(filename, split, split_method, report = false)
     ds = DataSet.new
     ds.from_file(filename)
 
     x = {}
-    ds.targets.each do |t|
-      x[t] = { total: ds.count(t), test: 0, train: 0, rows: [] }
-    end
-
-    target_index = ds.column_index(ds.target)
-    ds.rows.each_with_index do |row, i|
-      x[row[target_index]][:rows] << i
-    end
-
-    m = 1.0 - split
-    x.each do |t, v|
-      x[t][:test] = [1, (v[:total] * m).to_i].max
-      x[t][:train] = v[:total] - x[t][:test]
-    end
 
     train_rows = []
     test_rows = []
 
-    x.each_value do |v|
-      a, b = pick_n(v[:rows], v[:test])
-      train_rows += a
-      test_rows += b
+    case split_method
+    when 'balanced'
+      ds.targets.each do |t|
+        x[t] = { total: ds.count(t), test: 0, train: 0, rows: [] }
+      end
+
+      target_index = ds.column_index(ds.target)
+      ds.rows.each_with_index do |row, i|
+        x[row[target_index]][:rows] << i
+      end
+
+      m = 1.0 - split
+      x.each do |t, v|
+        x[t][:test] = [1, (v[:total] * m).to_i].max
+        x[t][:train] = v[:total] - x[t][:test]
+      end
+
+      x.each_value do |v|
+        a, b = pick_n(v[:rows], v[:test])
+        train_rows += a
+        test_rows += b
+      end
+    when 'pure_random'
+      x, train_rows, test_rows = split_pure_random(ds, split)
+    when 'unique_random'
+      x, train_rows, test_rows = split_unique_random(ds, split)
+    else
+      raise "Unknown split method [#{split_method}]"
     end
 
     train_ds = ds.extract_rows(train_rows)
@@ -238,7 +300,9 @@ class DataSet
     if report
       puts "The data set contains #{ds.size} rows"
       puts "The target for classification is the [#{ds.target}] column"
-      puts "There are #{x.size} unique values for #{ds.target}"
+      puts "There are #{ds.targets.size} unique values for #{ds.target}"
+      puts "There are #{x.size} #{ds.target} values in the split data"
+      puts "Split using the #{split_method} method"
       puts
 
       puts "Targets              :   total :   train :    test"
