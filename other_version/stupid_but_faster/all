@@ -1,0 +1,24 @@
+#!/bin/sh
+
+process() {
+  echo == $1
+  ./wf data/$1
+}
+
+process abalone.csv
+process banknotes.csv
+process blood_samples_dataset_balanced.csv
+process breast_cancer.csv
+process covid_simple.csv
+process crop_recommendation.csv
+process diabetes_prediction_dataset.csv
+process diabetes.csv
+process diamond_buckets.csv
+process diamond.csv
+process heart_statlog_cleveland_hungary_final.csv
+process iris.csv
+process seeds_dataset.csv
+process simple_weather.csv
+process weather_classification_data.csv
+process weather_forecast_data.csv
+process wine.csv

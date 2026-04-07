@@ -1,6 +1,6 @@
 # Datasets
 
-These are the datasets that I used to test how things work. Some sets show how things **don't** work and function more as warnings than examples. Anyhow what makes a (potentially) good dataset. Well the number of rows is a good start, too few and we are overfitting, the rules we generate become nothing more than a different way to write the original data
+These are the datasets that I used to test how things work. Some sets show how things **don't** work and function more as warnings than examples. Anyhow what makes a good dataset? Well the number of rows is a good start, too few and we are overfitting, the rules we generate become nothing more than a different way to write the original data
 
 But larger dataset is no guarantee that it is a better than a smaller dataset. The second condition is number of unique classifications. In the abalone dataset we have 4,177 rows and 27 unique classifications. Some occur hundreds of times, some only once. Which means for several outcomes they will only occur only in the training data or the testing data. This is why the success is so poor for both classification methods. More data could probably improve this
 
@@ -27,3 +27,12 @@ I am not saying you _have_ to use a lot of features but when a solution can be f
 |weather classification data|13,200|4|91.0101%|28.6616%|
 |weather forecast data|2,500|2|99.3324%|0.0000%|
 |wine|178|3|92.3077%|38.4615%|
+
+## Things that don't work
+
+The `abalone` dataset target is rings on the abalone which is a proxy for age, with the `diamond` dataset the the target is selling price. In effect these are regression problems not really classification problems. But I kept them because I wanted to see how they were handled. Failures need to be understood, just because you can stuff it in a csv file does not mean that it will work
+
+To try and make it work I created `diamond buckets` where the target values were assigned into buckets of 7,152 value size. It significantly improved the classification as long as you can accept price being classified as a possible range
+
+Again the abalone and diamond datasets are really regression problems. Perhaps with an order of magnitude more data it would become viable
+

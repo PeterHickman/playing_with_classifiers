@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+
+require 'json'
+require 'set'
+
+def walk(data, features)
+  return if data['Feature'] == ""
+
+  features << data['Feature']
+
+  walk(data['IfTrue'], features)
+  walk(data['IfFalse'], features)
+end
+
+data = JSON.load_file(ARGV[0])
+
+features = Set.new
+
+walk(data, features)
+
+puts features.size
+
+features.to_a.sort.each do |f|
+  puts "  #{f}"
+end

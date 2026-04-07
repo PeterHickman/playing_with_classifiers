@@ -85,7 +85,7 @@ The names appear in the same order as the columns of data and the second value c
 
 The last column is the target, the one that we will be output when trying to classify something. For the time being it has to be the last one. This will, hopefully, change
 
-What is "numeric" data? Well think of things that can be measured as numbers, things like age, height, weight or blood pressure. They are measured in numbers and can be compared as numbers. It makes sense to say that someone's blood pressure is high compared to a base line. You can use a combination of height and weight to determine the level of obesity. Numeric data is measures in numbers and the data can be compared as numbers. Basically we can _rank_ numerical data by the value and it will make sense
+What is "numeric" data? Well think of things that can be measured as numbers, things like age, height, weight or blood pressure. They are measured in numbers and can be compared as numbers. It makes sense to say that someone's blood pressure is high compared to a base line. You can use a combination of height and weight to determine the level of obesity. Numeric data is measured in numbers and the data can be compared as numbers. Basically we can _rank_ numerical data by the value and it will make sense
 
 What about eye colour? There is no way to measure the colour of an eye as a number and other than saying that blue eyes are not brown eyes we cannot rank eye colour. Thus eye colour is catagorical
 
@@ -250,7 +250,7 @@ The training dataset has 1649 rows and is written to training.csv
 
 The Gini classifier used only 12 features, the ID3 classifier used only **one**!!! Both scored 100%
 
-The ID3 classifier is overfitting. The glucose values are given at such an absurd precision that each outcome can be unambiguously associated with a target classification. Never blindly trust what comes out of the system, question everything. Rounding the data to 2 decimal places only adds one more feature for ID3 to use. ID3 is not suited to this dataset
+The ID3 classifier is overfitting. The glucose values are given at such an absurd precision that any feature can be unambiguously associated with a target classification. Never blindly trust what comes out of the system, question everything. Rounding the data to 2 decimal places only adds one more feature for ID3 to use. ID3 is not suited to this dataset
 
 So what can we do when we have lots of features. Well one technique is to pick a subset of the features at random and check them out. Generally the rule is if you have `X` features the subset size should be `sqrt(X)`. So for 24 features we will take a subset of 5
 
@@ -311,4 +311,6 @@ yes,barking,hair raised,dirty,showing teeth
 ```
 
 It can be turned into csv based data but it shows you that there are other approaches
+
+And then there is `stupid_but_faster`, a rewrite in Go that does not implement the ID3 classifier and outputs the solution as a tree encoded as JSON so that you can write your own scripts to do whatever you want with it. Either I will steal the last part and (solution as JSON) or simple replace the Ruby version with the Go version. But to be honest Ruby runs fast enough at this point
 

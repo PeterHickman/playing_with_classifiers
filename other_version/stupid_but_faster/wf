@@ -1,0 +1,13 @@
+#!/bin/sh
+
+echo "Information on the dataset"
+./classify --info --source $1
+
+echo "Split the dataset"
+./classify --split --source $1 --training training.csv --testing testing.csv --number 0.7
+
+echo "Find the solution"
+./classify --classify --source training.csv --output solution.json
+
+echo "Measure the solution"
+./classify --test --source testing.csv --solution solution.json
