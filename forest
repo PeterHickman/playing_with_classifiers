@@ -8,6 +8,13 @@ require 'gini'
 require 'id3'
 require 'test'
 
+SPLIT_METHODS = %w[
+  pure_random
+  unique_random
+  pure_balanced
+  unique_balanced
+]
+
 def generate(ds, klass, count)
   g = klass.new(ds)
   x = g.walk
@@ -40,12 +47,17 @@ o = Opts.new(ARGV)
 source = o.option('--source', 'string')
 split = o.option('--split', 'float')
 number = o.option('--number', 'integer')
+split_method = o.option('--method', 'string', 'pure_random')
+
+unless SPLIT_METHODS.include?(split_method)
+  raise "Unknown split method [#{split_method}]. Pick one of #{SPLIT_METHODS}"
+end
 
 ##
 # Split the dataset
 ##
 
-train_ds, test_ds = DataSet.create_training_and_test(source, split)
+train_ds, test_ds = DataSet.create_training_and_test(source, split, split_method)
 
 train_ds.save('forest_training.csv')
 test_ds.save('forest_testing.csv')
