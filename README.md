@@ -312,5 +312,5 @@ yes,barking,hair raised,dirty,showing teeth
 
 It can be turned into csv based data but it shows you that there are other approaches
 
-And then there is `stupid_but_faster`, a rewrite in Go that does not implement the ID3 classifier and outputs the solution as a tree encoded as JSON so that you can write your own scripts to do whatever you want with it. Either I will steal the last part and (solution as JSON) or simple replace the Ruby version with the Go version. But to be honest Ruby runs fast enough at this point
+And then there is `stupid_but_faster`, a rewrite in Go that does not implement the ID3 classifier and outputs the solution as a tree encoded as JSON so that you can write your own scripts to do whatever you want with it. Either I will steal the last part (solution as JSON) or simple replace the Ruby version with the Go version. But to be honest Ruby runs fast enough at this point
 
