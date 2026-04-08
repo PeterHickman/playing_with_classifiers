@@ -43,6 +43,17 @@ class DataSet
     @rows.map { |row| row[ci] }.uniq
   end
 
+  def target_counts
+    ci = @columns[@target][:index]
+
+    h = Hash.new(0)
+    @rows.each do |row|
+      h[row[ci]] += 1
+    end
+
+    h
+  end
+
   def size
     @rows.size
   end
