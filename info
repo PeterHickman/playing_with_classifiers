@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+$LOAD_PATH << './lib'
+
+require 'opts'
+require 'dataset'
+
+o = Opts.new(ARGV)
+
+source = o.option('--source', 'string')
+
+ds = DataSet.new
+ds.from_file(source)
+
+puts "Dataset has #{ds.size} rows"
+puts
+ds.columns.each_with_index do |c, i|
+  puts "Column        : ##{i+1}"
+  puts "Name          : #{c}"
+  puts "Type          : #{ds.column_type(c)}"
+  v = ds.values(c)
+  puts "Unique values : #{v.size} (#{format('%.2f', v.size / ds.size.to_f * 100)}%)"
+
+  # v.each do |k, c|
+  #   puts "  #{k} : #{c}"
+  # end
+
+  puts
+end
+
+puts "Target        : #{ds.target}"
+v = ds.target_counts
+puts "Unique values : #{v.size} (#{format('%.2f', v.size / ds.size.to_f * 100)}%)"
+v.each do |k, c|
+  puts format("%13s : %d", k, c)
+end
